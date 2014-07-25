@@ -175,9 +175,6 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
     fread_double_array(file, "max_mass_1", &np->mass_1_max);
     fread_double_array(file, "min_mass_2", &np->mass_2_min);
     fread_double_array(file, "max_mass_2", &np->mass_2_max);
-    for (int i=0; i< np->number_nbodies;++i){
-    fprintf(stderr, "%lf\n", np->mass_2_min[i]);
-    }
     
     
     /*
@@ -259,7 +256,6 @@ int get_min_parameters(NBODY_PARAMETERS *np, double ** result){
             (*result)[10*i+9]=np->radius_2_min[i];
             (*result)[10*i+10]=np->mass_1_min[i];
             (*result)[10*i+11]=np->mass_2_min[i];
-            fprintf(stderr, "%lf %lf\n", np->mass_2_min[i], (*result)[10*i+11]);
 
         }
     }
@@ -276,7 +272,6 @@ int get_max_parameters(NBODY_PARAMETERS *np, double **result){
     if (np->multi_stage){
         for (int i=0; i<np->number_nbodies; ++i){
             (*result)[12*i]=np->max_orbit_time[i];
-            fprintf(stderr, "%lf\n", np->max_orbit_time[i] );
             (*result)[12*i+1]=np->max_simulation_time[i];
             (*result)[12*i+2]=np->initial_x_max[i];
             (*result)[12*i+3]=np->initial_y_max[i];
@@ -292,7 +287,6 @@ int get_max_parameters(NBODY_PARAMETERS *np, double **result){
     }
     else{
         (*result)[0]=np->max_orbit_time[0];
-        fprintf(stderr, "%lf\n", np->max_orbit_time[0]);
         (*result)[1]=np->max_simulation_time[0];
         for (int i=0; i<np->number_nbodies; ++i){
             (*result)[10*i+2]=np->initial_x_max[i];
@@ -305,7 +299,6 @@ int get_max_parameters(NBODY_PARAMETERS *np, double **result){
             (*result)[10*i+9]=np->radius_2_max[i];
             (*result)[10*i+10]=np->mass_1_max[i];
             (*result)[10*i+11]=np->mass_2_max[i];
-            fprintf(stderr, "%lf %lf\n", np->mass_2_max[i], (*result)[10*i+11]);
         }
     }
     return size;
