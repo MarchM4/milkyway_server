@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Milkyway Server Usage</title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1138.51">
+  <style type="text/css">
+    p.p2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Courier; background-color: #e0ffff}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Courier; background-color: #e0ffff; min-height: 14.0px}
+    p.p8 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
+    li.li4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times}
+    span.s1 {text-decoration: underline ; color: #0000ee}
+    span.s2 {font: 12.0px Courier}
+    ol.ol1 {list-style-type: decimal}
+  </style>
+</head>
+<body>
+<h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times"><b>Milkyway Server Usage</b></h2>
+<p class="p2">This page details using the MilkyWay@Home server side daemons and binaries to start and stop the different evolutionary algorithms for both nbody simulations and stream fitting. These all utilize the Toolkit for Asynchronous Optimization (TAO), which takes care of the evolutionary algorithms and most of the interfacing with BOINC. The MilkyWay@Home specific server code can be found at the <a href="https://github.com/Milkyway-at-home/milkyway_server"><span class="s1">MilkyWay@Home Server Github Repository</span></a>, and the general purpose evolutionary algorithm code can be found at the <a href="https://github.com/travisdesell/tao"><span class="s1">TAO Github Repository</span></a>.</p>
+<p class="p2">Due to the binaries utilizing the BOINC packages, they have to be located and run within your project's bin directory. If you look at the source code for the MilkyWay@Home server, it uses the <a href="https://github.com/Milkyway-at-home/milkyway_server/blob/master/update_binaries.sh"><span class="s1">update_binaries.sh</span></a> shell script to copy the binaries generated into MilkyWay@Home's bin directory.</p>
+<p class="p2">So to use any of these, first you must be in the <span class="s2">/boinc/milkyway/bin</span> directory on the server.</p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Times"><b>Starting Searches</b></h3>
+<p class="p4">The <span class="s2">stream_fit_start_search</span> and <span class="s2">nbody_start_search</span> binaries utilize TAO but had a lot of milkyway specific coding regarding input files. For both you will need to specify the input files and a search name.</p>
+<h4 style="margin: 0.0px 0.0px 15.0px 0.0px; font: 12.0px Times"><b>Stream Fit</b></h4>
+<p class="p4">If you run the <span class="s2">stream_fit_start_search</span> without any command line arguments it will walk you through the missing ones:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./stream_fit_start_search<span class="Apple-converted-space"> </span></p>
+<p class="p6">ERROR: argument '--parameters' required and not found.</p>
+<p class="p4">The <span class="s2">--parameters</span> argument specifies which input parameter file (which specifies information about the stream and the bounds of the parameters) should be used.</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./stream_fit_start_search --parameters /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt<span class="Apple-converted-space"> </span></p>
+<p class="p6">parsed argument '--parameters' successfully: /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt</p>
+<p class="p6">ERROR: argument '--stars' required and not found.</p>
+<p class="p4">The <span class="s2">--stars</span> argument specifies the input file with information about the stars in that slice of the sky. If these are both specified it will print out the parameter file (for double checking) and prompt for a search name:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./stream_fit_start_search --parameters /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt --stars /boinc/src/milkyway_separation_assimilator/star_files/stars-9.txt<span class="Apple-converted-space"> </span></p>
+<p class="p6">parsed argument '--parameters' successfully: /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt</p>
+<p class="p6">parsed argument '--stars' successfully: /boinc/src/milkyway_separation_assimilator/star_files/stars-9.txt</p>
+<p class="p6">2012-06-29 17:55:22.3551 [CRITICAL] <b>input file 'stars-9.txt' already exists in download directory hierarchy as '/boinc/milkyway/download/236/stars-9.txt', not copying.</b></p>
+<p class="p6">input_filenames[0]: parameters-09-2s.txt</p>
+<p class="p6">input_filenames[1]: stars-9.txt</p>
+<p class="p6">parameters_version: 0.010000</p>
+<p class="p6">number_parameters: 4</p>
+<p class="p6">background_weight: 0.000000</p>
+<p class="p6">background_parameters[4]: 1.00000000000000000000, 0.57171300000000002672, 12.31211899999999914712, 1.00000000000000000000</p>
+<p class="p6">background_step[4]: 0.02000000000000000042, 0.00000400000000000000, 0.00008000000000000001, 0.02000000000000000042</p>
+<p class="p6">background_min[4]: 0.00000000000000000000, 0.29999999999999998890, 1.00000000000000000000, 0.10000000000000000555</p>
+<p class="p6">background_max[4]: 3.00000000000000000000, 1.00000000000000000000, 30.00000000000000000000, 3.00000000000000000000</p>
+<p class="p6">optimize_parameter[4]:<span class="Apple-converted-space">  </span>0, 1, 1, 0</p>
+<p class="p6">number_streams: 2, 5</p>
+<p class="p6">stream_weight: -3.305187</p>
+<p class="p6">stream_weight_step: 0.000001</p>
+<p class="p6">stream_weight_min: -20.000000</p>
+<p class="p6">stream_weight_max: 20.000000</p>
+<p class="p6">optimize_weight: 1</p>
+<p class="p6">stream_parameters[5]: 178.01025699999999574175, 22.45390199999999936153, 0.42035000000000000142, -0.46885799999999999699, 0.76057900000000000507</p>
+<p class="p6">stream_step[5]: 0.00003000000000000000, 0.00004000000000000000, 0.00006000000000000000, 0.00004000000000000000, 0.00000400000000000000</p>
+<p class="p6">stream_min[5]: 170.00000000000000000000, 2.29999999999999982236, -6.28318530717958623200, -6.28318530717958623200, 0.10000000000000000555</p>
+<p class="p6">stream_max[5]: 235.00000000000000000000, 72.40000000000000568434, 6.28318530717958623200, 6.28318530717958623200, 20.00000000000000000000</p>
+<p class="p6">optimize_parameter[5]:<span class="Apple-converted-space">  </span>1, 1, 1, 1, 1</p>
+<p class="p6">stream_weight: -1.361644</p>
+<p class="p6">stream_weight_step: 0.000001</p>
+<p class="p6">stream_weight_min: -20.000000</p>
+<p class="p6">stream_weight_max: 20.000000</p>
+<p class="p6">optimize_weight: 1</p>
+<p class="p6">stream_parameters[5]: 197.88423800000001051558, 23.88289199999999823376, 1.21063900000000002066, -1.61197400000000001796, 8.53437800000000024170</p>
+<p class="p6">stream_step[5]: 0.00003000000000000000, 0.00004000000000000000, 0.00006000000000000000, 0.00004000000000000000, 0.00000400000000000000</p>
+<p class="p6">stream_min[5]: 170.00000000000000000000, 2.39999999999999991118, -6.28318530717958623200, -6.28318530717958623200, 0.10000000000000000555</p>
+<p class="p6">stream_max[5]: 235.00000000000000000000, 72.40000000000000568434, 6.28318530717958623200, 6.28318530717958623200, 20.00000000000000000000</p>
+<p class="p6">optimize_parameter[5]:<span class="Apple-converted-space">  </span>1, 1, 1, 1, 1</p>
+<p class="p6">convolve: 120</p>
+<p class="p6">sgr_coordinates: 0</p>
+<p class="p6">aux_bg_profile: 0</p>
+<p class="p6">wedge: 9</p>
+<p class="p6">r[min,max,steps]: 16.000000, 23.500000, 1400</p>
+<p class="p6">mu[min,max,steps]: 170.000000, 235.000000, 1600</p>
+<p class="p6">nu[min,max,steps]: -1.250000, 1.250000, 640</p>
+<p class="p6">number_cuts: 0</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p6">2012-06-29 17:55:22.3560 [CRITICAL] <b>input file 'parameters-09-2s.txt' already exists in download directory hierarchy as '/boinc/milkyway/download/13f/parameters-09-2s.txt', not copying.</b></p>
+<p class="p6">min_bound: [0.3, 1, -20, 170, 2.3, -6.28318530717959, -6.28318530717959, 0.1, -20, 170, 2.4, -6.28318530717959, -6.28318530717959, 0.1]</p>
+<p class="p6">max_bound: [1, 30, 20, 235, 72.4, 6.28318530717959, 6.28318530717959, 20, 20, 235, 72.4, 6.28318530717959, 6.28318530717959, 20]</p>
+<p class="p6">reading star points</p>
+<p class="p6">read star points, n_stars: 95436</p>
+<p class="p6">looping over number intergrals: 1</p>
+<p class="p6">fpops: 1433.6</p>
+<p class="p6">fpops_new: 2.39368e+09</p>
+<p class="p6">integral_flops: 2.9601e+07</p>
+<p class="p6">likelihood_flops: 2.5051e+09 = 95436 * (120 * (100.0 + 2 * 58.0) + 251.0 + 2 * 12.0 + 54.0)</p>
+<p class="p6">fpops: 1433.6</p>
+<p class="p6">fpops_new: 2.39368e+09</p>
+<p class="p6">credit old: 159.859</p>
+<p class="p6">credit new: 129.272</p>
+<p class="p6">credit: 159.858780657646</p>
+<p class="p6">rsc_fpops_est: 29603477899564</p>
+<p class="p6">rsc_fpops_bound: 2.9603477899564e+16</p>
+<p class="p6">rsc_disk_bound: 15000000</p>
+<p class="p6">ERROR: argument '--search_name' required and not found.</p>
+<p class="p2">Note that it will let you know if the parameter files already exist in the BOINC download directory hierarchy (see the bold lines). <b>The input files to BOINC workunits are read only</b>. This means if you use incorrect input files, you cannot just delete them from the download hierarchy and reuse the same file name. This is because workunts the users have will cache those input files and continue to use the old incorrect ones. If this happens you need to use new input file names.</p>
+<p class="p2">You also need to specify a search name for the new search. The search name <b>must</b> start with either <span class="s2">de_</span> (for differential evolution) or <span class="s2">ps_</span> (for particle swarm) to let the system know what type of search you will be running. If you do not properly name your search, or if you use a name already in the database it will report an error. The asynchronous newton method should be added shortly (with the prefix <span class="s2">anm_</span>), and other searches may be added in the future.</p>
+<p class="p2">When you specify the input files and search name correctly, it will create the search and the work generator will automatically start generating workunits for it. Depending on the type of search it will also let you know what default search parameters are used (I've picked these for robustness but you may want to tweak them if you know what you're doing). For particle swarm the default search parameters are (along with the command line options to specify them yourself):</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./stream_fit_start_search --parameters /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt --stars /boinc/src/milkyway_separation_assimilator/star_files/stars-9.txt --search_name ps_separation_09_2s_sample_2</p>
+<p class="p6">...</p>
+<p class="p6">Argument '--population_size' not specified, using default of 200.</p>
+<p class="p6">Argument '--maximum_iterations' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_created' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_reported' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--inertia &lt;F&gt;' not found, using default of 0.75.</p>
+<p class="p6">Argument '--global_best_weight &lt;F&gt;' not found, using default of 1.5.</p>
+<p class="p6">Argument '--local_best_weight &lt;F&gt;' not found, using default of 1.5.</p>
+<p class="p6">Argument '--initial_velocity_scale &lt;F&gt;' not found, using default of 0.25.</p>
+<p class="p4">And for differential evolution the default search parameters are (along with their command line options):</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./stream_fit_start_search --parameters /boinc/src/milkyway_separation_assimilator/parameter_files/parameters-09-2s.txt --stars /boinc/src/milkyway_separation_assimilator/star_files/stars-9.txt --search_name de_separation_09_2s_sample_2</p>
+<p class="p6">Argument '--population_size' not specified, using default of 200.</p>
+<p class="p6">Argument '--maximum_iterations' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_created' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_reported' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--parent_scaling_factor &lt;F&gt;' not found, using default of 1.0.</p>
+<p class="p6">Argument '--differential_scaling_factor &lt;F&gt;' not found, using default of 1.0.</p>
+<p class="p6">Argument '--crossover_rate &lt;F&gt;' not found, using default of 0.5.</p>
+<p class="p6">Argument '--number_pairs &lt;I&gt;' not found, using default of 1.</p>
+<p class="p6">Argument '--parent_selection &lt;S&gt;' not found, using default of 'best'.</p>
+<p class="p6">Argument '--recombination_selection &lt;S&gt;' not found, using default of 'binary'.</p>
+<p class="p2">You can ignore the <span class="s2">--maximum_iterations</span> argument as this is used for stand alone iterative evolutionary algorithms. If you specify <span class="s2">--maximum_created</span> the search will only generate that many workunits. If you specify <span class="s2">--maximum_reported</span> the search will stop generating workunits after it has received that many results.</p>
+<p class="p2">The <span class="s2">--population_size</span> specifies how many individuals are saved in the evolutionary algorithm. The larger this value the more searching the search will do and the longer it will take to converge. It's a tradeoff between how fast it reaches a solution and how frequently it will reach the 'best' solution. Larger values mean the search will be less likely to get stuck in a local optimum.</p>
+<p class="p8"><br></p>
+<p class="p4">For a brief description of what the rest of these do, for particle swarm:</p>
+<ol class="ol1">
+  <li class="li4"><span class="s2">--inertia &lt;double&gt;</span><br>
+This is the w parameter for a particle swarm (basically, what the previous velocity gets multiplied by when generating the new particle position). Default is 0.95 but you can make this quite a bit lower (even down to like 0.1 in some cases, but 0.4 or 0.5 is probably better) and this should increase convergence at the cost of less searching.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--global_best_weight &lt;double&gt;</span><br>
+This is how much a particle is pull towards the best found solution. The default is 2.0, but you can lower this a bit which can improve convergence.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--local_best_weight &lt;double&gt;</span><br>
+This is how much a particle is pull towards it's own previous best found solution. The default is 2.0, but you can lower this a bit which can improve convergence.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--initial_velocity_scale &lt;double&gt;</span><br>
+This isn't in the old code, but basically the initial velocities of particles can be really high which can really reduce convergence. The default here is 0.1, so in this case you might want to make it higher (up to 0.5) to improve searching.</li>
+</ol>
+<p class="p8"><br></p>
+<p class="p2">For differential evolution (differential evolution does recombination between some member of the search, a parent member and the sum of differentials between pairs of members):</p>
+<ol class="ol1">
+  <li class="li4"><span class="s2">--parent_scaling _factor &lt;double&gt;</span><br>
+This is how much the parent value is scaled, the default is 1.0, but this could be reduced to 0.5 or so which could improve convergence.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--differential_scaling_factor &lt;double&gt;</span><br>
+This is how much the sum of the differentials are scaled. The default is 1.0 but it could be lowered to 0.5/0.4 to improve convergence.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--crossover_rate &lt;double&gt;</span><br>
+This is used to determine the probability of taking one of the parameters calculated by (parent_scaling_factor * parent + differential_scaling_factor * sum(differentials)). The default is 0.5, but increasing this to 0.8 or 0.9 could improve convergence.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--number_pairs &lt;int&gt;</span><br>
+The default here is 1. Testing different values could improve convergence -- i don't know if there's a convergence vs searching tradeoff here. More pairs just means it moves through the search space differently.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--parent_selection &lt; best | random | current-to-best | current-to-random &gt;</span><br>
+The default here is 'best'. The options with best usually converge a bit faster than the ones with random (but not always). Something to fiddle around with.</li>
+  <li class="li4"></li>
+  <li class="li4"><span class="s2">--recombination_selection &lt; binary | exponential | sum | none &gt;</span><br>
+The default here is 'binary'. I think typically the other options don't converge as fast, but it's another knob you can twiddle.</li>
+</ol>
+<p class="p8"><br></p>
+<p class="p2">For more information about these, I recommend reading the related work section of my PhD Thesis: <a href="http://wcl.cs.rpi.edu/theses/desell-phd-thesis.pdf"><span class="s1">Asynchronous Global Optimization for Massive-Scale Computing</span></a>.</p>
+<h4 style="margin: 0.0px 0.0px 15.0px 0.0px; font: 12.0px Times"><b>N-Body</b></h4>
+<p class="p4">Starting an n-body simulation search is almost identical to starting a stream fit search, except that you also have to specify the min and max search parameters and number of bodies on the command line, e.g.:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./nbody_start_search --min_simulation_time 1.0 --min_orbit_time 0.01 --min_radius_1 1.0 --min_radius_2 0.1 --min_mass_1 1.0 --min_mass_2 0.1 --max_simulation_time 3.0 --max_orbit_time 1.0 --max_radius_1 15.0 --max_radius_2 1.0 --max_mass_1 15.0 --max_mass_2 1.0 --n_bodies 100000 --parameters /boinc/src/milkyway_nbody_assimilator/data/100k_EMD_RUN_fix.lua --histogram /boinc/src/milkyway_nbody_assimilator/data/100k_EMD_RUN_fix.hist --search_name de_nbody_100K_Plum_EMD</p>
+<p class="p6">parsed argument '--min_simulation_time' successfully: 1</p>
+<p class="p6">parsed argument '--max_simulation_time' successfully: 3</p>
+<p class="p6">parsed argument '--min_orbit_time' successfully: 0.01</p>
+<p class="p6">parsed argument '--max_orbit_time' successfully: 1</p>
+<p class="p6">parsed argument '--min_radius_1' successfully: 1</p>
+<p class="p6">parsed argument '--max_radius_1' successfully: 15</p>
+<p class="p6">parsed argument '--min_radius_2' successfully: 0.1</p>
+<p class="p6">parsed argument '--max_radius_2' successfully: 1</p>
+<p class="p6">parsed argument '--min_mass_1' successfully: 1</p>
+<p class="p6">parsed argument '--max_mass_1' successfully: 15</p>
+<p class="p6">parsed argument '--min_mass_2' successfully: 0.1</p>
+<p class="p6">parsed argument '--max_mass_2' successfully: 1</p>
+<p class="p6">parsed argument '--n_bodies' successfully: 100000</p>
+<p class="p6">parsed argument '--parameters' successfully: /boinc/src/milkyway_nbody_assimilator/data/100k_EMD_RUN_fix.lua</p>
+<p class="p6">parsed argument '--histogram' successfully: /boinc/src/milkyway_nbody_assimilator/data/100k_EMD_RUN_fix.hist</p>
+<p class="p6">2012-06-29 18:19:59.1931 [CRITICAL] <b>input file '100k_EMD_RUN_fix.lua' already exists in download directory hierarchy as '/boinc/milkyway/download/242/100k_EMD_RUN_fix.lua', not copying.</b></p>
+<p class="p6">2012-06-29 18:19:59.1933 [CRITICAL] <b>input file '100k_EMD_RUN_fix.hist' already exists in download directory hierarchy as '/boinc/milkyway/download/71/100k_EMD_RUN_fix.hist', not copying.</b></p>
+<p class="p6">input_filenames[0]: 100k_EMD_RUN_fix.lua</p>
+<p class="p6">input_filenames[1]: 100k_EMD_RUN_fix.hist</p>
+<p class="p6">parsed argument '--search_name' successfully: de_nbody_100K_Plum_EMD</p>
+<p class="p6">Argument '--population_size' not specified, using default of 200.</p>
+<p class="p6">Argument '--maximum_iterations' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_created' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--maximum_reported' not specified, could run forever. Hit control-C to quit.</p>
+<p class="p6">Argument '--parent_scaling_factor &lt;F&gt;' not found, using default of 1.0.</p>
+<p class="p6">Argument '--differential_scaling_factor &lt;F&gt;' not found, using default of 1.0.</p>
+<p class="p6">Argument '--crossover_rate &lt;F&gt;' not found, using default of 0.5.</p>
+<p class="p6">Argument '--number_pairs &lt;I&gt;' not found, using default of 1.</p>
+<p class="p6">Argument '--parent_selection &lt;S&gt;' not found, using default of 'best'.</p>
+<p class="p6">Argument '--recombination_selection &lt;S&gt;' not found, using default of 'binary'.</p>
+<p class="p6">parsed argument '--search_name' successfully: de_nbody_100K_Plum_EMD</p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 12.0px Times">To run an n-body simulation with more than one dwarf galaxy, add the search parameter --n_dwarves, followed by the number of dwarfs in your simulation, and then add the search parameter --extra_parameters, followed by the name of a text file with the position, velocity, radius, and mass parameters of each dwarf.</h3>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Times"><b>Stopping Searches</b></h3>
+<p class="p4">Stopping searches can be done using TAO's <span class="s2">tao_stop_search</span> binary 'out of the box' for either the nbody simulation or stream fit searches. If you run the binary, it will step you through the command line arguments required to stop a search and what your options are. If you run it, it will ask what type of search you would like to stop based on the client application name (either a stream_fit -- milkyway; or a body -- milkyway_nbody):</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_stop_search<span class="Apple-converted-space"> </span></p>
+<p class="p6">Need to specify which application with the '--app ' command line argument.</p>
+<p class="p6">Applications in the database (name, id):</p>
+<p class="p6"><span class="Apple-converted-space">    </span>milkyway, 3</p>
+<p class="p6"><span class="Apple-converted-space">    </span>milkyway_nbody, 7</p>
+<p class="p4">When you run it, specifying the application name but don't specify the name of the search, it wil prompt you to specify the search name and give you a listing of searches currently in the database (for that particular application), as well as if they are currently running or if have been stopped previously:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_stop_search --app milkyway</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">Need to specify which search with the '--search_name ' command line argument.</p>
+<p class="p6">Searches for app id 3 (name, id):<span class="Apple-converted-space"> </span></p>
+<p class="p6">Searches for app id 3 (name, id, status):<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_05_3_test_1_rand, 4, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_05_3_test_1, 3, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_null_3_test1, 2, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>ps_separation_10_2s_sample_2, 9, running</p>
+<p class="p6"><span class="Apple-converted-space">    </span>ps_separation_14_2s_05_3_test_1, 8, finished</p>
+<p class="p4">When you stop a search, (unlike before) the <span class="s2">./stop</span> script does not need to be run previously. When you run <span class="s2">./tao_stop_search</span> specifying the app and search name, it should report that the search is successfuly stopped (and report any errors that occured otherwise):</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_stop_search --app milkyway --search_name ps_separation_10_2s_sample_2</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">parsed argument '--search_name' successfully: ps_separation_10_2s_sample_2</p>
+<p class="p6">Search successfully stopped.</p>
+<p class="p4">When you stop a search it will leave all it's information in the databse. If you want to <b>delete</b> a search, you can add the <span class="s2">--delete</span> command line argument, which will completely remove it from the database. In this case, you <b>do</b> have to run the <span class="s2">./stop</span> script before doing a delete operation:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ sudo -u boinc ./stop</p>
+<p class="p6">Entering DISABLED mode</p>
+<p class="p6">Stopping all daemons</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10478</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10476</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10465</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10463</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10461</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10469</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10467</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10473</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10480</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Killed process 10471</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Waiting for process 10476 to end: . ok</p>
+<p class="p6"><span class="Apple-converted-space">  </span>Waiting for process 10461 to end: . ok</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_stop_search --app milkyway --search_name ps_separation_14_2s_05_3_test_1 --delete</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">parsed argument '--search_name' successfully: ps_separation_14_2s_05_3_test_1</p>
+<p class="p6">parsed argument '--delete' successfully.</p>
+<p class="p6">parsed argument '--delete' successfully.</p>
+<p class="p6">Successfully deleted search with queries:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-converted-space">    </span>DELETE FROM particle_swarm WHERE name = 'ps_separation_14_2s_05_3_test_1''.</p>
+<p class="p6"><span class="Apple-converted-space">    </span>DELETE FROM particle WHERE particle_swarm_id = 8'.</p>
+<p class="p6"><span class="Apple-converted-space">    </span>DELETE FROM tao_workunit_information WHERE search_name = 'ps_separation_14_2s_05_3_test_1' AND app_id = 3'.</p>
+<p class="p6">Search successfully stopped.</p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Times"><b>Checking Search Status</b></h3>
+<p class="p4">Checking the status of searches can also be done 'out of the box' for either the nbody or stream fit searches using the <span class="s2">tao_search_status</span> binary. Using it is very similar to stopping a search. If you have no command line options it will ask you for which application and list the available ones:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_search_status<span class="Apple-converted-space"> </span></p>
+<p class="p6">Need to specify which application with the '--app ' command line argument.</p>
+<p class="p6">Applications in the database (name, id):</p>
+<p class="p6"><span class="Apple-converted-space">    </span>milkyway, 3</p>
+<p class="p6"><span class="Apple-converted-space">    </span>milkyway_nbody, 7</p>
+<p class="p4">If you specify an application but do not specify a search name, it will list you the search names for the specified application, and if they are running or not:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_search_status --app milkyway</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">Need to specify which search with the '--search_name ' command line argument.</p>
+<p class="p6">Searches for app id 3 (name, id, status):<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_05_3_test_1_rand, 4, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_05_3_test_1, 3, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>de_separation_14_2s_null_3_test1, 2, finished</p>
+<p class="p6"><span class="Apple-converted-space">    </span>ps_separation_10_2s_sample_2, 9, running</p>
+<p class="p6"><span class="Apple-converted-space">    </span>ps_separation_14_2s_05_3_test_1, 8, finished</p>
+<p class="p4">If you specify both the application and search name, it will report all the information about the search in the database. It's parameters along with every individual:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_search_status --app milkyway --search_name ps_separation_10_2s_sample_2</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">parsed argument '--search_name' successfully: ps_separation_10_2s_sample_2</p>
+<p class="p6">[ParticleSwarmDB<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-converted-space">    </span>id = 9</p>
+<p class="p6"><span class="Apple-converted-space">    </span>name = 'ps_separation_10_2s_sample_2'</p>
+<p class="p6"><span class="Apple-converted-space">    </span>inertia = 0.75</p>
+<p class="p6"><span class="Apple-converted-space">    </span>global_best_weight = 1.5</p>
+<p class="p6"><span class="Apple-converted-space">    </span>local_best_weight = 1.5</p>
+<p class="p6"><span class="Apple-converted-space">    </span>initial_velocity_scale = 0.25</p>
+<p class="p6"><span class="Apple-converted-space">    </span>current_individual = 11</p>
+<p class="p6"><span class="Apple-converted-space">    </span>initialized_individuals = 200</p>
+<p class="p6"><span class="Apple-converted-space">    </span>current_iteration = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>maximum_iterations = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>individuals_created = 96411</p>
+<p class="p6"><span class="Apple-converted-space">    </span>maximum_created = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>individuals_reported = 6944</p>
+<p class="p6"><span class="Apple-converted-space">    </span>maximum_reported = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>population_size = 200</p>
+<p class="p6"><span class="Apple-converted-space">    </span>min_bound = '[0.3, 1, -20, 165, 2.3, -6.28318530717959, -6.28318530717959, 0.1, -20, 165, 2.4, -6.28318530717959, -6.28318530717959, 0.1]'</p>
+<p class="p6"><span class="Apple-converted-space">    </span>max_bound = '[1, 30, 20, 227, 72.4, 6.28318530717959, 6.28318530717959, 20, 20, 227, 72.4, 6.28318530717959, 6.28318530717959, 20]'</p>
+<p class="p6"><span class="Apple-converted-space">    </span>app_id = 3</p>
+<p class="p6">]</p>
+<p class="p6"><span class="Apple-converted-space">    </span>[Particle</p>
+<p class="p6"><span class="Apple-converted-space">        </span>particle_swarm_id = 9</p>
+<p class="p6"><span class="Apple-converted-space">        </span>position = 0</p>
+<p class="p6"><span class="Apple-converted-space">        </span>local_best_fitness = -2.95667</p>
+<p class="p6"><span class="Apple-converted-space">        </span>parameters = '[0.621634413643444, 11.3592844202588, -20, 199.151865476552, 46.9191625742572, 3.88855951411151, -2.59753175034031, 5.80374104990708, -0.520197084027315, 191.466864855005, 29.2028499843234, -1.73899892223015, -6.28318530717959, 4.61383964293284]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>velocity = '[0.0377087042500848, 1.62449614231727, 4.33422751629531, 6.53592885136391, -4.82884440111757, 1.91004074226858, 0.911645973788596, -2.84537987887243, 0.0682160233759563, -2.79149598453473, 2.85342664511826, -2.20963430236297, 4.88924918329303e-08, -3.42910304360551]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>local_best = '[0.555406614193454, 8.73710101660458, -16.8760167823823, 189.02911607925, 66.3855164067686, 0.80778185891985, -6.01748041312372, 10.3181785502518, -0.607560208756554, 196.092266769036, 24.6616272974731, 2.85661106085672, -6.28318530717959, 10.6627155793275]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>seed = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>]</p>
+<p class="p6"><span class="Apple-converted-space">    </span>...</p>
+<p class="p6"><span class="Apple-converted-space">    </span>[Particle</p>
+<p class="p6"><span class="Apple-converted-space">        </span>particle_swarm_id = 9</p>
+<p class="p6"><span class="Apple-converted-space">        </span>position = 199</p>
+<p class="p6"><span class="Apple-converted-space">        </span>local_best_fitness = -2.98189</p>
+<p class="p6"><span class="Apple-converted-space">        </span>parameters = '[0.618654774207537, 10.8472571747525, -6.26942287838657, 195.469310763927, 39.6046808039921, 2.39475128790968, -1.26909842921336, 7.85638982079557, -0.877305744882567, 192.780699305399, 30.4753096579711, -0.624402086984643, -6.28318530717936, 6.87561102128358]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>velocity = '[-0.00115234098645506, -0.0203319015828465, 0.00923968471739939, 0.0335611113403493, -2.77561714721248, 0.0536147262050219, -0.0401754094274429, -0.0647197757384186, 0.0202014791220733, 0.00937701231594195, -0.262199264778197, 0.000191802750241887, 2.25153229393982e-13, -0.0744142626444022]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>local_best = '[0.695559747706563, 12.5924604080653, -6.8327525866863, 194.168676092725, 2.3, -0.907497106947218, 0.987198769911825, 11.4865058568865, -2.72245068350373, 192.722392572929, 46.8809234338924, -0.726920068838745, -6.28318530717959, 11.3789782028016]'</p>
+<p class="p6"><span class="Apple-converted-space">        </span>seed = 0</p>
+<p class="p6"><span class="Apple-converted-space">    </span>]</p>
+<p class="p7"><br></p>
+<p class="p6">You can print the best X individuals by using the '--print_best &lt;int&gt;' command line argument.</p>
+<p class="p4">If you use the <span class="s2">--print_best</span> command line argument, it will also print out the fitness and parameters of the X best individuals in ascenting order (the one at the bottom will have the best fitness) along with the best, median, average and worst fitness of the individuals in the search:</p>
+<p class="p6">deselt@milkyway:/boinc/milkyway/bin$ ./tao_search_status --app milkyway --search_name ps_separation_10_2s_sample_2 --print_best 10</p>
+<p class="p6">parsed argument '--app' successfully: milkyway</p>
+<p class="p6">parsed argument '--search_name' successfully: ps_separation_10_2s_sample_2</p>
+<p class="p6">...</p>
+<p class="p6">parsed argument '--print_best' successfully: 10</p>
+<p class="p6">best fitness: -2.94688</p>
+<p class="p6">median fitness: -2.95928</p>
+<p class="p6">average fitness: -2.96098</p>
+<p class="p6">worst fitness: -2.98703</p>
+<p class="p7"><br></p>
+<p class="p6">The best 11 of 200 individuals are (position, fitness, parameters, metadata):</p>
+<p class="p6"><span class="Apple-converted-space">    </span>82, -2.94869, [0.618745095220644, 8.58454657821037, -10.1569419239194, 165, 64.8426361539719, 4.92591123129646, -3.73578335673276, 14.8669154515619, -0.797348901021088, 192.625591591706, 25.4533119540938, 3.45339444570894, 3.5017994754653, 5.70532899225279], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>108, -2.94868, [0.537779376888376, 11.8858419236721, -5.85346596463139, 197.708009415674, 2.3, -0.388882520008274, -1.23386726180218, 9.77064169734694, -1.07083701149625, 190.905618777002, 29.9212570868006, 2.15901978201623, -6.28318530717959, 3.67710783886896], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>182, -2.94849, [0.637387169616782, 10.6868736843629, -6.1648343207396, 198.53358731381, 51.2823826217887, 2.47033505470172, -1.5013839202236, 7.31385317624045, -0.587035086748135, 191.776312617414, 25.5504934847835, -0.355309055820077, -6.28318530717959, 6.0124835856002], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>188, -2.94821, [0.640812235663328, 9.38488713962676, -5.5785957446789, 194.577222294901, 8.53330913741534, 1.77113510932504, -1.59734033914, 8.07766664977023, -0.716338225407295, 192.321122848445, 25.8015524873966, -0.420744178906514, -5.81328170268211, 5.01494569868247], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>30, -2.94761, [0.658889102038651, 11.126981432889, -6.32696352192443, 193.597844781593, 13.8737450603115, 3.03840231877617, -1.19264495135978, 7.89066268527659, -0.805805166613402, 192.673489497524, 25.8888394240358, -0.576232336555298, -6.27764782582176, 4.87500463484209], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>143, -2.94747, [0.619837529570583, 10.3263225013638, -6.67502667981068, 195.040176094184, 43.1968996746504, 3.32288928214982, -1.78926503660272, 7.06974874498268, -0.658749177703002, 191.494909449045, 29.2536580834232, -0.553697755030244, -6.28318530717959, 6.00415798017726], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>33, -2.94743, [0.649126302459326, 9.01499343675167, -5.58100147732427, 188.230768636163, 64.7562098445984, 5.02283473408045, 1.99342088315494, 12.9788325989752, -0.821336796980621, 189.576017360026, 24.4281945613344, 2.87396554635134, 6.28318530717959, 5.69946657880664], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>151, -2.94738, [0.621071720163947, 10.8595795310652, -6.83019420148458, 194.751169997846, 46.6563144543792, 2.89934082749834, -1.59244094603213, 7.94482364781986, -0.680266211974275, 191.4711162575, 27.0749144566038, -0.847976615268898, -6.28318530717959, 6.22526089598598], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>191, -2.94725, [0.635171784621117, 10.6579181545044, -6.41097651832245, 193.927029773754, 45.4987994250324, 3.10164393776464, -1.51127034277273, 7.48431809147393, -0.676634779322796, 192.028834657503, 27.602429960748, -0.527044525393978, -6.28318530717959, 6.26930970315429], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>130, -2.94719, [0.64056244510068, 10.6868465486039, -6.35417504721908, 194.110867225967, 44.949866627476, 3.11271071410224, -1.47916844425308, 7.5739454351953, -0.709771152632807, 191.936181631545, 27.782034354476, -0.536188058562095, -6.28318530717959, 6.12468341810018], ''</p>
+<p class="p6"><span class="Apple-converted-space">    </span>3, -2.94688, [0.605724239573602, 10.553379949651, -6.17503795676321, 195.6864294928, 47.1995527852288, 2.93969043645403, -1.64206011178062, 7.25629449616176, -0.565899483040795, 192.789445078507, 27.7535439689067, -0.607007735246566, -6.28318530717959, 6.12885800104327], ''</p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Times"><b>Assimilator, Validation and Work Generation</b></h3>
+<p class="p4">Assimilation and validation are completed handled 'out of the box' by TAO. The work similar to the standard boinc assimilation and validation daemons with similar command line options. They are in MilkyWay@Home's <span class="s2">config.xml</span> as follows:</p>
+<p class="p6">237 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">238 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">239 <span class="Apple-converted-space">        </span>stream_fit_validator -d 3 --app milkyway --credit_from_wu</p>
+<p class="p6">240 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">241 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p6">242<span class="Apple-converted-space"> </span></p>
+<p class="p6">243 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">244 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">245 <span class="Apple-converted-space">        </span>stream_fit_assimilator --app milkyway</p>
+<p class="p6">246 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">247 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p6">...</p>
+<p class="p6">255 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">256 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">257 <span class="Apple-converted-space">        </span>nbody_validator -d 3 --app milkyway_nbody</p>
+<p class="p6">258 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">259 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p6">260<span class="Apple-converted-space"> </span></p>
+<p class="p6">261 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">262 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">263 <span class="Apple-converted-space">        </span>nbody_assimilator --app milkyway_nbody</p>
+<p class="p6">264 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">265 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p4">The stream fit workunits have their credit pre-calculated and specified in the workunits XML, so the <span class="s2">--credit_from_wu</span> command line argument must be specified. The <span class="s2">-d</span> argument specifies how much debugging information is printed to the log files, which can be found in <span class="s2">/boinc/milkyway/log_milkyway/</span>. Work generation for the stream fit searches is 'out of the box', but the nbody work generation needs some tweaking as the number of fpops (floating point operations) for each workunit is dependent on the input parameters and cannot be precalculated. To do this, it is compiled with the <span class="s2">-DFPOPS_FROM_PARAMETERS</span> directive (see the <a href="https://github.com/Milkyway-at-home/milkyway_server/blob/master/CMakeLists.txt"><span class="s1">CMakeLists.txt</span></a> file) with the <a href="https://github.com/Milkyway-at-home/milkyway_server/blob/master/nbody_fpops_from_parameters.cxx"><span class="s1">nbody_fpops_from_parameters.cxx</span></a> file. Which will calculate the fpops for each workunit. Further, the nbody workunits also need to be seeded, so this can be specified with the <span class="s2">--requires_seeding</span> command line option to the work generator. As such, these are in the <span class="s2">config.xml</span> file as:</p>
+<p class="p6">249 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">250 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">251 <span class="Apple-converted-space">        </span>stream_fit_work_generator -d 3 --app milkyway</p>
+<p class="p6">252 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">253 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p6">...</p>
+<p class="p6">267 <span class="Apple-converted-space">    </span>&lt;daemon&gt;</p>
+<p class="p6">268 <span class="Apple-converted-space">      </span>&lt;cmd&gt;</p>
+<p class="p6">269 <span class="Apple-converted-space">        </span>nbody_work_generator -d 3 --app milkyway_nbody --requires_seeding</p>
+<p class="p6">270 <span class="Apple-converted-space">      </span>&lt;/cmd&gt;</p>
+<p class="p6">271 <span class="Apple-converted-space">    </span>&lt;/daemon&gt;</p>
+<p class="p4">And as before, the amount of debugging information printed out to the logs can be specified with the <span class="s2">-d</span> command line option (lower numbers are less output).</p>
+</body>
+</html>
