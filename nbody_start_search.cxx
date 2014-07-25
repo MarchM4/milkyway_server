@@ -156,9 +156,12 @@ int main(int argc, char **argv) {
 
     cout << "input_filenames[0]: " << input_filenames[0] << endl;
     cout << "input_filenames[1]: " << input_filenames[1] << endl;
+<<<<<<< HEAD
     if (multi_stage){
         cout << "input_filenames[2]: " << input_filenames[2] << endl;
     }
+=======
+>>>>>>> 9ad6cddcf2b30970cb1656c7665953bce42e4453
 
     //6. get any command line options
     //      -f nbody_parameters.lua -h histogram.txt
@@ -200,7 +203,10 @@ int main(int argc, char **argv) {
         vector<double> x_bound(max_b, max_b + size_max);
         min_bound=n_bound;
         max_bound=x_bound;
+<<<<<<< HEAD
         free_nbody_parameters(np);
+=======
+>>>>>>> 9ad6cddcf2b30970cb1656c7665953bce42e4453
         free(np);
 
     }
