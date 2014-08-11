@@ -8,13 +8,13 @@
 typedef struct nbody_parameters {
 	double parameters_version;
 	int number_nbody_parameters;
-	int multi_stage;
 	int number_nbodies;
+    int number_extra;
     
     double* min_orbit_time;
     double* max_orbit_time;
-    double* min_simulation_time;
-    double* max_simulation_time;
+    double min_simulation_time;
+    double max_simulation_time;
     
 	double* initial_x_min;
     double* initial_x_max;
@@ -39,6 +39,9 @@ typedef struct nbody_parameters {
     double* mass_1_max;
 	double* mass_2_min;
     double* mass_2_max;
+    
+    double* other_min;
+    double* other_max;
 } NBODY_PARAMETERS;
 
 int read_nbody_parameters(const char* file, NBODY_PARAMETERS *np);

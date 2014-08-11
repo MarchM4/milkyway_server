@@ -28,6 +28,7 @@ int fread_double_array(FILE *file, const char *array_name, double** array_t) {
     int i, size;
     fscanf(file, array_name);
     fscanf(file, "[%d]: ", &size);
+    //fprintf("%d\n", &size);
     
     (*array_t) = (double*)malloc(sizeof(double) * size);
     
@@ -46,8 +47,6 @@ int fread_double_array(FILE *file, const char *array_name, double** array_t) {
 void free_nbody_parameters(NBODY_PARAMETERS* np){
     free(np->min_orbit_time);
     free(np->max_orbit_time);
-    free(np->min_simulation_time);
-    free(np->max_simulation_time);
     free(np->initial_x_min);
     free(np->initial_x_max);
     free(np->initial_y_min);
@@ -68,6 +67,8 @@ void free_nbody_parameters(NBODY_PARAMETERS* np){
     free(np->mass_1_max);
     free(np->mass_2_min);
     free(np->mass_2_max);
+    free(np->other_min);
+    free(np->other_max);
 }
 
 int read_nbody_parameters(const char* filename, NBODY_PARAMETERS *np) {
@@ -109,14 +110,9 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
     }
     
     fscanf(file, "number_nbodies: %d\n", &np->number_nbodies);
-    fscanf(file, "multi_stage: %d\n", &np->multi_stage);
+    fscanf(file, "number_extra: %d\n", &np->number_extra);
     int number_orbit_parameters;
-    if (np->multi_stage){
-        number_orbit_parameters=np->number_nbodies;
-    }
-    else{
-        number_orbit_parameters=1;
-    }
+    number_orbit_parameters=np->number_nbodies;
     /*
     fread_double_array(file, "background_parameters", &np->background_parameters);
     fread_double_array(file, "background_step", &np->background_step);
@@ -125,10 +121,7 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
     fread_int_array(file, "optimize_parameter", &np->background_optimize);
      */
     np->min_orbit_time              = (double*)malloc(sizeof(double) * number_orbit_parameters);
-    np->max_orbit_time              = (double*)malloc(sizeof(double) * number_orbit_parameters);
-    np->min_simulation_time         = (double*)malloc(sizeof(double) * number_orbit_parameters);
-    np->max_simulation_time         = (double*)malloc(sizeof(double) * number_orbit_parameters);
-    
+    np->max_orbit_time              = (double*)malloc(sizeof(double) * number_orbit_parameters);    
     np->initial_x_min              = (double*)malloc(sizeof(double) * np->number_nbodies);
     np->initial_x_max              = (double*)malloc(sizeof(double) * np->number_nbodies);
     np->initial_y_min              = (double*)malloc(sizeof(double) * np->number_nbodies);
@@ -149,12 +142,14 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
     np->mass_1_min                 = (double*)malloc(sizeof(double) * np->number_nbodies);
     np->mass_1_max                  = (double*)malloc(sizeof(double) * np->number_nbodies);
     np->mass_2_min                  = (double*)malloc(sizeof(double) * np->number_nbodies);
-    np->mass_2_max             =   (double*)malloc(sizeof(int)   * np->number_nbodies);
+    np->mass_2_max             =   (double*)malloc(sizeof(double)   * np->number_nbodies);
+    np->other_min              =   (double*)malloc(sizeof(double)   * np->number_nbodies);
+    np->other_max              =    (double*)malloc(sizeof(double) * np->number_nbodies);
     
     fread_double_array(file, "min_orbit_time", &np->min_orbit_time);
     fread_double_array(file, "max_orbit_time", &np->max_orbit_time);
-    fread_double_array(file, "min_simulation_time", &np->min_simulation_time);
-    fread_double_array(file, "max_simulation_time", &np->max_simulation_time);
+    fscanf(file, "min_simulation_time: %lf\n", &np->min_simulation_time);
+    fscanf(file, "max_simulation_time: %lf\n", &np->max_simulation_time);
     fread_double_array(file, "min_x", &np->initial_x_min);
     fread_double_array(file, "max_x", &np->initial_x_max);
     fread_double_array(file, "min_y", &np->initial_y_min);
@@ -175,6 +170,9 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
     fread_double_array(file, "max_mass_1", &np->mass_1_max);
     fread_double_array(file, "min_mass_2", &np->mass_2_min);
     fread_double_array(file, "max_mass_2", &np->mass_2_max);
+    fread_double_array(file, "min_other", &np->other_min);
+    fread_double_array(file, "max_other", &np->other_max);
+
     
     /*
     fscanf(file, "convolve: %d\n", &ap->convolve);
@@ -219,86 +217,54 @@ void fread_nbody_parameters(FILE* file, NBODY_PARAMETERS *np) {
 }
 
 int get_min_parameters(NBODY_PARAMETERS *np, double ** result){
-    int size=np->number_nbodies*10;
-    size += 2;
-    if (np->multi_stage){
-        size += 2;
-    }
+    int size=np->number_nbodies*11;
+    size += 1;
+    size += np->number_extra;
     (*result) = (double*)malloc(sizeof(double) * size);
-    if (np->multi_stage){
-        for (int i=0; i<np->number_nbodies; ++i){
-            (*result)[12*i]=np->min_orbit_time[i];
-            (*result)[12*i+1]=np->min_simulation_time[i];
-            (*result)[12*i+2]=np->initial_x_min[i];
-            (*result)[12*i+3]=np->initial_y_min[i];
-            (*result)[12*i+4]=np->initial_z_min[i];
-            (*result)[12*i+5]=np->initial_dx_min[i];
-            (*result)[12*i+6]=np->initial_dy_min[i];
-            (*result)[12*i+7]=np->initial_dz_min[i];
-            (*result)[12*i+8]=np->radius_1_min[i];
-            (*result)[12*i+9]=np->radius_2_min[i];
-            (*result)[12*i+10]=np->mass_1_min[i];
-            (*result)[12*i+11]=np->mass_2_min[i];
-        }
-    }
-    else{
-        (*result)[0]=np->min_orbit_time[0];
-        (*result)[1]=np->min_simulation_time[0];
-        for (int i=0; i<np->number_nbodies; ++i){
-            (*result)[10*i+2]=np->initial_x_min[i];
-            (*result)[10*i+3]=np->initial_y_min[i];
-            (*result)[10*i+4]=np->initial_z_min[i];
-            (*result)[10*i+5]=np->initial_dx_min[i];
-            (*result)[10*i+6]=np->initial_dy_min[i];
-            (*result)[10*i+7]=np->initial_dz_min[i];
-            (*result)[10*i+8]=np->radius_1_min[i];
-            (*result)[10*i+9]=np->radius_2_min[i];
-            (*result)[10*i+10]=np->mass_1_min[i];
-            (*result)[10*i+11]=np->mass_2_min[i];
+    (*result)[0]=np->min_simulation_time;
+    for (int i=0; i<np->number_nbodies; ++i){
+        (*result)[11*i+1]=np->min_orbit_time[i];
+        (*result)[11*i+2]=np->initial_x_min[i];
+        (*result)[11*i+3]=np->initial_y_min[i];
+        (*result)[11*i+4]=np->initial_z_min[i];
+        (*result)[11*i+5]=np->initial_dx_min[i];
+        (*result)[11*i+6]=np->initial_dy_min[i];
+        (*result)[11*i+7]=np->initial_dz_min[i];
+        (*result)[11*i+8]=np->radius_1_min[i];
+        (*result)[11*i+9]=np->radius_2_min[i];
+        (*result)[11*i+10]=np->mass_1_min[i];
+        (*result)[11*i+11]=np->mass_2_min[i];
 
-        }
+    }
+    int n=np->number_nbodies*11+1;
+    for (int j=0; j<np->number_extra; ++j){
+        (*result)[n+j]=np->other_min[j];
     }
     return size;
 }
 
 int get_max_parameters(NBODY_PARAMETERS *np, double **result){
-    int size=np->number_nbodies*10;
-    size += 2;
-    if (np->multi_stage){
-        size += 2;
-    }
+    int size=np->number_nbodies*11;
+    size += 1;
+    size += np->number_extra;
     (*result) = (double*)malloc(sizeof(double) * size);
-    if (np->multi_stage){
-        for (int i=0; i<np->number_nbodies; ++i){
-            (*result)[12*i]=np->max_orbit_time[i];
-            (*result)[12*i+1]=np->max_simulation_time[i];
-            (*result)[12*i+2]=np->initial_x_max[i];
-            (*result)[12*i+3]=np->initial_y_max[i];
-            (*result)[12*i+4]=np->initial_z_max[i];
-            (*result)[12*i+5]=np->initial_dx_max[i];
-            (*result)[12*i+6]=np->initial_dy_max[i];
-            (*result)[12*i+7]=np->initial_dz_max[i];
-            (*result)[12*i+8]=np->radius_1_max[i];
-            (*result)[12*i+9]=np->radius_2_max[i];
-            (*result)[12*i+10]=np->mass_1_max[i];
-            (*result)[12*i+11]=np->mass_2_max[i];
-        }
+    (*result)[0]=np->max_simulation_time;
+    for (int i=0; i<np->number_nbodies; ++i){
+        (*result)[11*i+1]=np->max_orbit_time[i];
+        (*result)[11*i+2]=np->initial_x_max[i];
+        (*result)[11*i+3]=np->initial_y_max[i];
+        (*result)[11*i+4]=np->initial_z_max[i];
+        (*result)[11*i+5]=np->initial_dx_max[i];
+        (*result)[11*i+6]=np->initial_dy_max[i];
+        (*result)[11*i+7]=np->initial_dz_max[i];
+        (*result)[11*i+8]=np->radius_1_max[i];
+        (*result)[11*i+9]=np->radius_2_max[i];
+        (*result)[11*i+10]=np->mass_1_max[i];
+        (*result)[11*i+11]=np->mass_2_max[i];
     }
-    else{
-        (*result)[0]=np->max_orbit_time[0];
-        (*result)[1]=np->max_simulation_time[0];
-        for (int i=0; i<np->number_nbodies; ++i){
-            (*result)[10*i+2]=np->initial_x_max[i];
-            (*result)[10*i+3]=np->initial_y_max[i];
-            (*result)[10*i+4]=np->initial_z_max[i];
-            (*result)[10*i+5]=np->initial_dx_max[i];
-            (*result)[10*i+6]=np->initial_dy_max[i];
-            (*result)[10*i+7]=np->initial_dz_max[i];
-            (*result)[10*i+8]=np->radius_1_max[i];
-            (*result)[10*i+9]=np->radius_2_max[i];
-            (*result)[10*i+10]=np->mass_1_max[i];
-            (*result)[10*i+11]=np->mass_2_max[i];
-        }
+    int n=np->number_nbodies*11+1;
+    for (int j=0; j<np->number_extra; ++j){
+        (*result)[n+j]=np->other_max[j];
     }
     return size;
 
